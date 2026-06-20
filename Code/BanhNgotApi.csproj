@@ -17,3 +17,103 @@
   </ItemGroup>
 
 </Project>
+using BanhNgotApi.Data;
+using BanhNgotApi.Models;
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
+var app = builder.Build();
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.UseCors("AllowAll");
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.EnsureCreated();
+
+    if (!db.SanPhams.Any())
+    {
+        db.SanPhams.AddRange(
+            new SanPham
+            {
+                MaBanh = "B001",
+                TenBanh = "Bánh Kem Dâu Tây",
+                LoaiBanh = "Bánh kem",
+                MoTa = "Bánh kem mềm mịn phủ đầy dâu tây tươi",
+                GiaBan = 285000,
+                SoLuongTon = 15,
+                HinhAnh = "banh-kem-dau-tay.jpg",
+                TrangThai = "Đang bán"
+            },
+            new SanPham
+            {
+                MaBanh = "B002",
+                TenBanh = "Bánh Sinh Nhật Socola",
+                LoaiBanh = "Bánh gato",
+                MoTa = "Bánh gato socola đậm đà, phủ kem tươi béo ngậy",
+                GiaBan = 320000,
+                SoLuongTon = 8,
+                HinhAnh = "banh-socola.jpg",
+                TrangThai = "Đang bán"
+            },
+            new SanPham
+            {
+                MaBanh = "B003",
+                TenBanh = "Bánh Tiramisu",
+                LoaiBanh = "Bánh mousse",
+                MoTa = "Bánh tiramisu mềm mịn, vị cà phê nhẹ",
+                GiaBan = 350000,
+                SoLuongTon = 6,
+                HinhAnh = "banh-tiramisu.jpg",
+                TrangThai = "Đang bán"
+            }
+        );
+    if (!db.NhanViens.Any())
+{
+    db.NhanViens.Add(new NhanVien
+    {
+        MaNV = "NV001",
+        HoTen = "Nguyễn Văn An",
+        ChucVu = "Quản lý cửa hàng",
+        SoDienThoai = "0901111222",
+        Email = "admin@banhngot.vn",
+        TaiKhoan = "admin",
+        MatKhau = "123456",
+        TrangThai = "Đang làm việc"
+    });
+
+    db.SaveChanges();
+}
+        db.SaveChanges();
+    }
+}
+
+app.Run();
