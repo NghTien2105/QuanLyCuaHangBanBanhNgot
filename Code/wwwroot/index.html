@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng nhập - Quản lý bánh ngọt</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #fff7f4;
+            color: #2b0d05;
+        }
+
+        .login-page {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 42% 58%;
+        }
+
+        .left {
+            background: #fffaf8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .right {
+            background: linear-gradient(135deg, #fff2ea, #ffd9c7);
+            padding: 70px 55px;
+        }
+
+        .login-box {
+            width: 360px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .logo-icon {
+            width: 65px;
+            height: 65px;
+            margin: 0 auto 15px;
+            background: #d9546f;
+            border-radius: 16px;
+            color: white;
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo h1 {
+            color: #d9546f;
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .logo h2 {
+            margin: 6px 0;
+            font-size: 17px;
+        }
+
+        .logo p {
+            color: #9b6a5a;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 28px;
+            border: 1px solid #f0dbd2;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            font-size: 22px;
+        }
+
+        .card p {
+            color: #9b6a5a;
+            font-size: 14px;
+        }
+
+        label {
+            display: block;
+            margin-top: 16px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 13px;
+            border: 1px solid #f0cfc0;
+            background: #fff6f1;
+            outline: none;
+        }
+
+        .btn-login {
+            width: 100%;
+            margin-top: 22px;
+            padding: 15px;
+            border: none;
+            border-radius: 14px;
+            background: #d9546f;
+            color: white;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .line {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 20px 0;
+            color: #9b6a5a;
+            font-size: 14px;
+        }
+
+        .line::before,
+        .line::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+          background: #eed4c8;
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            border: 1px solid #d9546f;
+            background: white;
+            color: #d9546f;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .welcome h2 {
+            color: #d9546f;
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .welcome h3 {
+            font-size: 23px;
+            margin-top: 0;
+        }
+
+        .welcome p {
+            color: #9b6a5a;
+        }
+
+        .cake-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-top: 25px;
+        }
+
+        .cake-card {
+            background: white;
+            border-radius: 13px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .cake-card img {
+            width: 100%;
+            height: 125px;
+            object-fit: cover;
+        }
+
+        .cake-card h4 {
+            text-align: center;
+            font-size: 13px;
+            margin: 10px;
+        }
+
+        #message {
+            text-align: center;
+            color: #d9546f;
+            font-weight: bold;
+            margin-top: 12px;
+        }
+
+        .modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal-box {
+    width: 520px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: white;
+    border-radius: 18px;
+    padding: 26px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+}
+
+.modal-box h2 {
+    margin-top: 0;
+    color: #d9546f;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #f0cfc0;
+    border-radius: 12px;
+    background: #fff8f5;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.btn-cancel {
+    flex: 1;
+    background: #f5ded6;
+    border: none;
+    padding: 13px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-save {
+    flex: 1;
+    background: #d9546f;
+    color: white;
+    border: none;
+    padding: 13px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+}
+    .modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal-box {
+    width: 520px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: white;
+    border-radius: 18px;
+    padding: 26px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+}
+
+.modal-box h2 {
+    margin-top: 0;
+    color: #d9546f;
+    text-align: center;
+}
+
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #f0cfc0;
+    border-radius: 12px;
+    background: #fff8f5;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.btn-cancel {
+    flex: 1;
+    background: #f5ded6;
+    border: none;
+    padding: 13px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-save {
+    flex: 1;
+    background: #d9546f;
+    color: white;
+    border: none;
+    padding: 13px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+}
+    </style>
+</head>
+
+<body>
+    <section class="login-page">
+        <div class="left">
+            <div class="login-box">
+                <div class="logo">
+                    <div class="logo-icon">🍰</div>
+                    <h1>HỆ THỐNG QUẢN LÝ</h1>
+                    <h2>BÁN BÁNH NGỌT</h2>
+                    <p>🧁 Tiệm Bánh Ngọt Việt Nam</p>
+                </div>
+
+                <div class="card">
+                    <h3>Đăng nhập</h3>
+                    <p>Vui lòng nhập thông tin để tiếp tục</p>
+
+                    <label>Tên đăng nhập</label>
+                    <input id="taiKhoan" type="text" placeholder="Nhập tên đăng nhập...">
+
+                    <label>Mật khẩu</label>
+                    <input id="matKhau" type="password" placeholder="Nhập mật khẩu...">
+
+                    <button class="btn-login" onclick="dangNhap()">Đăng nhập</button>
+
+                    <div class="line">hoặc</div>
+
+                   <button class="btn-register" onclick="openRegisterModal()">
+    Đăng ký tài khoản
+</button>
+
+                    <div id="message"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right">
+            <div class="welcome">
+                <h2>🎂 Chào mừng đến với</h2>
+                <h3>Tiệm Bánh Ngọt Của Chúng Tôi</h3>
+                <p>Quản lý cửa hàng bánh dễ dàng, hiệu quả và chuyên nghiệp</p>
+            </div>
+
+            <div class="cake-grid">
+                <div class="cake-card">
+                    <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=800">
+                    <h4>Bánh Kem Sinh Nhật</h4>
+                </div>
+
+                <div class="cake-card">
+                    <img src="https://images.unsplash.com/photo-1486427944299-d1955d23e34d?q=80&w=800">
+                    <h4>Bánh Cupcake</h4>
+                </div>
+
+                <div class="cake-card">
+                    <img src="https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?q=80&w=800">
+                    <h4>Bánh Kem Dâu Tây</h4>
+                </div>
+
+                <div class="cake-card">
+                  <img src="https://images.unsplash.com/photo-1519869325930-281384150729?q=80&w=800">
+                    <h4>Bánh Cupcake Nhiều Màu</h4>
+                </div>
+
+                <div class="cake-card">
+                    <img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?q=80&w=800">
+                    <h4>Bánh Socola</h4>
+                </div>
+
+                <div class="cake-card">
+                    <img src="https://images.unsplash.com/photo-1535254973040-607b474cb50d?q=80&w=800">
+                    <h4>Bánh Sinh Nhật</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+      function dangNhap() {
+    const taiKhoan = document.getElementById("taiKhoan").value.trim();
+    const matKhau = document.getElementById("matKhau").value.trim();
+    const message = document.getElementById("message");
+
+    if (taiKhoan === "" || matKhau === "") {
+        message.innerText = "Vui lòng nhập tài khoản và mật khẩu";
+        return;
+    }
+
+    // Chủ cửa hàng / quản lý
+    if (taiKhoan === "admin" && matKhau === "123456") {
+        localStorage.setItem("isLogin", "true");
+        localStorage.setItem("currentUser", JSON.stringify({
+            hoTen: "Quản lý cửa hàng",
+            taiKhoan: "admin",
+            vaiTro: "Quản lý"
+        }));
+
+        window.location.href = "app.html";
+        return;
+    }
+
+    // Khách hàng đã đăng ký
+    const accounts = JSON.parse(localStorage.getItem("customerAccounts")) || [];
+
+    const user = accounts.find(acc =>
+        acc.taiKhoan === taiKhoan && acc.matKhau === matKhau
+    );
+
+    if (user) {
+        localStorage.setItem("isLogin", "true");
+        localStorage.setItem("currentUser", JSON.stringify(user));
+
+        window.location.href = "customer.html";
+    } else {
+        message.innerText = "Sai tài khoản hoặc mật khẩu";
+    }
+}
+    function openRegisterModal() {
+    document.getElementById("registerModal").style.display = "flex";
+}
+
+function closeRegisterModal() {
+    document.getElementById("registerModal").style.display = "none";
+
+    document.getElementById("regHoTen").value = "";
+    document.getElementById("regSdt").value = "";
+    document.getElementById("regEmail").value = "";
+    document.getElementById("regDiaChi").value = "";
+    document.getElementById("regTaiKhoan").value = "";
+    document.getElementById("regMatKhau").value = "";
+    document.getElementById("regXacNhan").value = "";
+}
+
+function dangKyTaiKhoan() {
+    const hoTen = document.getElementById("regHoTen").value.trim();
+    const sdt = document.getElementById("regSdt").value.trim();
+    const email = document.getElementById("regEmail").value.trim();
+    const diaChi = document.getElementById("regDiaChi").value.trim();
+    const taiKhoan = document.getElementById("regTaiKhoan").value.trim();
+    const matKhau = document.getElementById("regMatKhau").value.trim();
+  const xacNhan = document.getElementById("regXacNhan").value.trim();
+
+    if (!hoTen || !sdt || !email || !diaChi || !taiKhoan || !matKhau || !xacNhan) {
+        alert("Vui lòng nhập đầy đủ thông tin");
+        return;
+    }
+
+    if (taiKhoan.length < 4) {
+        alert("Tên đăng nhập phải có ít nhất 4 ký tự");
+        return;
+    }
+
+    if (matKhau.length < 6) {
+        alert("Mật khẩu phải có ít nhất 6 ký tự");
+        return;
+    }
+
+    if (matKhau !== xacNhan) {
+        alert("Mật khẩu xác nhận không khớp");
+        return;
+    }
+
+    let accounts = JSON.parse(localStorage.getItem("customerAccounts")) || [];
+
+    const isExist = accounts.some(acc => acc.taiKhoan === taiKhoan);
+
+    if (isExist || taiKhoan === "admin") {
+        alert("Tên đăng nhập đã tồn tại");
+        return;
+    }
+
+    const newAccount = {
+        maKH: "KH" + String(accounts.length + 1).padStart(3, "0"),
+        hoTen: hoTen,
+        sdt: sdt,
+        email: email,
+        diaChi: diaChi,
+        taiKhoan: taiKhoan,
+        matKhau: matKhau,
+        vaiTro: "Khách hàng",
+        ngayDangKy: new Date().toLocaleDateString("vi-VN")
+    };
+
+    accounts.push(newAccount);
+    localStorage.setItem("customerAccounts", JSON.stringify(accounts));
+
+    let customers = JSON.parse(localStorage.getItem("customers")) || [];
+
+    customers.push({
+        ma: newAccount.maKH,
+        hoTen: hoTen,
+        sdt: sdt,
+        diaChi: diaChi,
+        soDon: 0,
+        tongChiTieu: 0,
+        ngayThamGia: newAccount.ngayDangKy
+    });
+
+    localStorage.setItem("customers", JSON.stringify(customers));
+
+    alert("Đăng ký tài khoản thành công! Bạn có thể đăng nhập ngay.");
+
+    closeRegisterModal();
+
+    document.getElementById("taiKhoan").value = taiKhoan;
+    document.getElementById("matKhau").value = "";
+}
+    </script>
+    <div class="modal" id="registerModal">
+    <div class="modal-box">
+        <h2>🧁 Đăng Ký Tài Khoản</h2>
+
+        <div class="form-group">
+            <label>Họ và tên</label>
+            <input id="regHoTen" placeholder="Ví dụ: Nguyễn Văn A">
+        </div>
+
+        <div class="form-group">
+            <label>Số điện thoại</label>
+            <input id="regSdt" placeholder="Ví dụ: 0901234567">
+        </div>
+
+        <div class="form-group">
+            <label>Email</label>
+            <input id="regEmail" placeholder="Ví dụ: email@example.com">
+        </div>
+
+        <div class="form-group">
+            <label>Địa chỉ</label>
+            <input id="regDiaChi" placeholder="Ví dụ: 123 Lê Lợi, TP.HCM">
+        </div>
+
+        <div class="form-group">
+            <label>Tên đăng nhập</label>
+            <input id="regTaiKhoan" placeholder="Ít nhất 4 ký tự">
+        </div>
+
+        <div class="form-group">
+            <label>Mật khẩu</label>
+            <input id="regMatKhau" type="password" placeholder="Ít nhất 6 ký tự">
+            </div>
+
+        <div class="form-group">
+            <label>Xác nhận mật khẩu</label>
+            <input id="regXacNhan" type="password" placeholder="Nhập lại mật khẩu">
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeRegisterModal()">Hủy</button>
+            <button class="btn-save" onclick="dangKyTaiKhoan()">Đăng ký</button>
+        </div>
+    </div>
+</div>
+<div class="modal" id="registerModal">
+    <div class="modal-box">
+        <h2>🧁 Đăng Ký Tài Khoản</h2>
+
+        <div class="form-group">
+            <label>Họ và tên</label>
+            <input id="regHoTen" placeholder="Ví dụ: Nguyễn Văn A">
+        </div>
+
+        <div class="form-group">
+            <label>Số điện thoại</label>
+            <input id="regSdt" placeholder="Ví dụ: 0901234567">
+        </div>
+
+        <div class="form-group">
+            <label>Email</label>
+            <input id="regEmail" placeholder="email@example.com">
+        </div>
+
+        <div class="form-group">
+            <label>Địa chỉ</label>
+            <input id="regDiaChi" placeholder="Nhập địa chỉ">
+        </div>
+
+        <div class="form-group">
+            <label>Tên đăng nhập</label>
+            <input id="regTaiKhoan" placeholder="Ít nhất 4 ký tự">
+        </div>
+
+        <div class="form-group">
+            <label>Mật khẩu</label>
+            <input id="regMatKhau" type="password" placeholder="Ít nhất 6 ký tự">
+        </div>
+
+        <div class="form-group">
+            <label>Xác nhận mật khẩu</label>
+            <input id="regXacNhan" type="password" placeholder="Nhập lại mật khẩu">
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeRegisterModal()">Hủy</button>
+            <button class="btn-save" onclick="dangKyTaiKhoan()">Đăng ký</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
