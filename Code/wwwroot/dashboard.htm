@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Tổng Quan Hệ Thống</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #fff7f4;
+            color: #2b0d05;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 235px;
+            background: #fff0e8;
+            border-right: 1px solid #f1d5c8;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            padding: 28px 18px;
+            border-bottom: 1px solid #efd8cd;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            background: #d9546f;
+            color: white;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
+        }
+
+        .brand h3 {
+            margin: 0;
+            color: #d9546f;
+            font-size: 15px;
+            line-height: 18px;
+        }
+
+        .brand span {
+            font-size: 12px;
+            color: #8d5c4d;
+        }
+
+        .menu {
+            padding: 15px;
+        }
+
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #2b0d05;
+            padding: 14px 16px;
+            border-radius: 13px;
+            margin-bottom: 7px;
+            font-weight: 500;
+        }
+
+        .menu a.active {
+            background: #d9546f;
+            color: white;
+            font-weight: bold;
+        }
+
+        .logout {
+            border-top: 1px solid #efd8cd;
+            padding: 18px;
+        }
+
+        .logout button {
+            border: none;
+            background: transparent;
+            color: #d9546f;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .main {
+            flex: 1;
+            padding: 28px 24px;
+        }
+
+        .title h1 {
+            margin: 0;
+            font-size: 26px;
+        }
+
+        .title p {
+            margin-top: 8px;
+            color: #9b6a5a;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-top: 28px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 20px;
+            border: 1px solid #f0dbd2;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-icon {
+          width: 40px;
+            height: 40px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+        }
+
+        .pink { background: #ffe0e8; }
+        .yellow { background: #fff0c9; }
+        .blue { background: #dcebff; }
+        .green { background: #d4f8e6; }
+        .purple { background: #eadfff; }
+
+        .percent {
+            color: #17b45b;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .card h2 {
+            margin: 16px 0 5px;
+            font-size: 23px;
+        }
+
+        .card p {
+            margin: 0;
+            color: #9b6a5a;
+            font-size: 14px;
+        }
+
+        .charts {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .chart-box {
+            background: white;
+            border-radius: 14px;
+            border: 1px solid #f0dbd2;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+            padding: 22px;
+            height: 280px;
+        }
+
+        .chart-box h3 {
+            margin: 0 0 20px;
+            font-size: 17px;
+        }
+
+        .line-chart {
+            position: relative;
+            height: 190px;
+            border-left: 1px solid #bbb;
+            border-bottom: 1px solid #bbb;
+            background:
+                linear-gradient(to right, #f5e5dd 1px, transparent 1px),
+                linear-gradient(to bottom, #f5e5dd 1px, transparent 1px);
+            background-size: 80px 40px;
+        }
+
+        .dot {
+            position: absolute;
+            width: 11px;
+            height: 11px;
+            background: #d9546f;
+            border-radius: 50%;
+        }
+
+        .line {
+            position: absolute;
+            height: 3px;
+            background: #d9546f;
+            transform-origin: left center;
+        }
+
+        .bars {
+            height: 190px;
+            display: flex;
+            align-items: flex-end;
+            gap: 32px;
+            border-left: 1px solid #bbb;
+            border-bottom: 1px solid #bbb;
+            padding-left: 25px;
+            background:
+                linear-gradient(to bottom, #f5e5dd 1px, transparent 1px);
+            background-size: 100% 40px;
+        }
+
+        .bar-wrap {
+            text-align: center;
+            color: #9b6a5a;
+            font-size: 13px;
+        }
+
+        .bar {
+            width: 48px;
+            background: #d9546f;
+            border-radius: 7px 7px 0 0;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 1100px) {
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .charts {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div>
+              <div class="brand">
+                    <div class="brand-icon">🍰</div>
+                    <div>
+                        <h3>HỆ THỐNG QUẢN LÝ<br>BÁN BÁNH NGỌT</h3>
+                        <span>Hương Vị Việt</span>
+                    </div>
+                </div>
+
+                <nav class="menu">
+                    <a class="active" href="#">▦ Tổng quan</a>
+                    <a href="#">🧁 Quản lý bánh ngọt</a>
+                    <a href="#">📋 Đơn hàng</a>
+                    <a href="#">👥 Khách hàng</a>
+                    <a href="#">📦 Kho nguyên liệu</a>
+                    <a href="#">📊 Thống kê doanh thu</a>
+                    <a href="#">👤 Nhân viên</a>
+                </nav>
+            </div>
+
+            <div class="logout">
+                <button onclick="logout()">↪ Đăng xuất</button>
+            </div>
+        </aside>
+
+        <main class="main">
+            <section class="title">
+                <h1>📊 Tổng Quan Hệ Thống</h1>
+                <p>Thứ Bảy, 13/06/2026 · Tiệm Bánh Ngọt Hương Vị Việt</p>
+            </section>
+
+            <section class="cards">
+                <div class="card">
+                    <div class="card-top">
+                        <div class="card-icon pink">🛍️</div>
+                        <span class="percent">↑ +3 tháng này</span>
+                    </div>
+                    <h2 id="tongSanPham">12</h2>
+                    <p>Tổng sản phẩm</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-top">
+                        <div class="card-icon yellow">📋</div>
+                        <span class="percent">↑ +58 tháng này</span>
+                    </div>
+                    <h2>1.243</h2>
+                    <p>Tổng đơn hàng</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-top">
+                        <div class="card-icon blue">👥</div>
+                        <span class="percent">↑ +24 tháng này</span>
+                    </div>
+                    <h2>387</h2>
+                    <p>Khách hàng</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-top">
+                        <div class="card-icon green">↗</div>
+                        <span class="percent">↑ +12% hôm qua</span>
+                    </div>
+                    <h2>1.890.000đ</h2>
+                    <p>Doanh thu hôm nay</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-top">
+                        <div class="card-icon purple">🗓️</div>
+                        <span class="percent">↑ +16% tháng 5</span>
+                    </div>
+                    <h2>52 triệu đ</h2>
+                    <p>Doanh thu tháng 6</p>
+                </div>
+            </section>
+
+            <section class="charts">
+                <div class="chart-box">
+                  <h3>📈 Doanh Thu 8 Ngày Gần Nhất</h3>
+
+                    <div class="line-chart">
+                        <div class="line" style="left:0px; top:145px; width:80px; transform:rotate(-35deg);"></div>
+                        <div class="line" style="left:75px; top:100px; width:80px; transform:rotate(28deg);"></div>
+                        <div class="line" style="left:150px; top:132px; width:80px; transform:rotate(-36deg);"></div>
+                        <div class="line" style="left:225px; top:86px; width:80px; transform:rotate(24deg);"></div>
+                        <div class="line" style="left:300px; top:112px; width:80px; transform:rotate(-34deg);"></div>
+
+                        <div class="dot" style="left:0px; top:140px;"></div>
+                        <div class="dot" style="left:75px; top:95px;"></div>
+                        <div class="dot" style="left:150px; top:126px;"></div>
+                        <div class="dot" style="left:225px; top:80px;"></div>
+                        <div class="dot" style="left:300px; top:107px;"></div>
+                        <div class="dot" style="left:375px; top:60px;"></div>
+                    </div>
+                </div>
+
+                <div class="chart-box">
+                    <h3>📊 Doanh Thu Theo Tháng</h3>
+
+                    <div class="bars">
+                        <div class="bar-wrap">
+                            <div class="bar" style="height:85px;"></div>
+                            T1
+                        </div>
+                        <div class="bar-wrap">
+                            <div class="bar" style="height:75px;"></div>
+                            T2
+                        </div>
+                        <div class="bar-wrap">
+                            <div class="bar" style="height:115px;"></div>
+                            T3
+                        </div>
+                        <div class="bar-wrap">
+                            <div class="bar" style="height:105px;"></div>
+                            T4
+                        </div>
+                        <div class="bar-wrap">
+                            <div class="bar" style="height:130px;"></div>
+                            T5
+                        </div>
+                        <div class="bar-wrap">
+                            <div class="bar" style="height:150px;"></div>
+                            T6
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        if (localStorage.getItem("isLogin") !== "true") {
+            window.location.href = "index.html";
+        }
+
+        function logout() {
+            localStorage.removeItem("isLogin");
+            localStorage.removeItem("user");
+            window.location.href = "index.html";
+        }
+
+        async function loadDashboard() {
+            try {
+                const res = await fetch("/api/SanPham");
+              const data = await res.json();
+                document.getElementById("tongSanPham").innerText = data.length;
+            } catch {
+                document.getElementById("tongSanPham").innerText = "12";
+            }
+        }
+
+        loadDashboard();
+    </script>
+</body>
+</html>
