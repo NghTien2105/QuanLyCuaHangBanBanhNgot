@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Tiệm bánh ngọt</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #fff7f4;
+            color: #2b0d05;
+        }
+
+        .topbar {
+            height: 58px;
+            background: white;
+            border-bottom: 1px solid #f0d7cc;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 60px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-icon {
+            width: 38px;
+            height: 38px;
+            background: #d9546f;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand h3 {
+            margin: 0;
+            color: #d9546f;
+            font-size: 15px;
+        }
+
+        .brand span {
+            font-size: 12px;
+            color: #9b6a5a;
+        }
+
+        .nav {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .nav button {
+            border: none;
+            background: transparent;
+            padding: 12px 18px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .nav button.active {
+            background: #d9546f;
+            color: white;
+        }
+
+        .cart-btn {
+            background: #fff0e8 !important;
+        }
+
+        .user {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #ffd0bd;
+            color: #d9546f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .logout {
+            color: #9b6a5a;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .container {
+            padding: 35px 60px;
+        }
+
+        .title h1 {
+            margin-bottom: 5px;
+            font-size: 28px;
+        }
+
+        .title p {
+            color: #9b6a5a;
+            margin-top: 0;
+        }
+
+        .search-row {
+            display: flex;
+            gap: 10px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .search-row input {
+            width: 320px;
+            padding: 14px;
+            border-radius: 14px;
+            border: 1px solid #f0d7cc;
+            background: white;
+        }
+
+        .filter {
+            border: 1px solid #f0d7cc;
+            background: white;
+          padding: 12px 18px;
+            border-radius: 14px;
+            cursor: pointer;
+        }
+
+        .filter.active {
+            background: #d9546f;
+            color: white;
+            font-weight: bold;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #f0d7cc;
+        }
+
+        .product-img {
+            height: 180px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .tag {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background: white;
+            padding: 6px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            color: #9b6a5a;
+        }
+
+        .product-body {
+            padding: 14px;
+        }
+
+        .product-body h3 {
+            margin: 0 0 8px;
+            font-size: 17px;
+        }
+
+        .product-body p {
+            color: #9b6a5a;
+            font-size: 13px;
+            min-height: 36px;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 12px 0;
+        }
+
+        .price {
+            color: #d9546f;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .stock {
+            color: #9b6a5a;
+            font-size: 13px;
+        }
+
+        .add-btn {
+            width: 100%;
+            border: none;
+            background: #d9546f;
+            color: white;
+            padding: 13px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+        th {
+            background: #f3e3d8;
+            color: #9b6a5a;
+            text-align: left;
+            padding: 15px;
+        }
+
+        td {
+            padding: 14px 15px;
+            border-bottom: 1px solid #f0e0d7;
+        }
+
+        .btn-small {
+            border: none;
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .delete {
+            background: #ffe0e0;
+            color: #c62828;
+        }
+
+        .checkout {
+            margin-top: 20px;
+            display: flex;
+          justify-content: flex-end;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .checkout h2 {
+            color: #d9546f;
+        }
+
+        .checkout button {
+            border: none;
+            background: #d9546f;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        @media (max-width: 1100px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .topbar {
+                padding: 0 20px;
+            }
+
+            .container {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-icon">🍰</div>
+            <div>
+                <h3>TIỆM BÁNH NGỌT</h3>
+                <span>Hương Vị Việt</span>
+            </div>
+        </div>
+
+        <div class="nav">
+            <button class="active" onclick="showPage('shop', this)">🏪 Cửa hàng</button>
+            <button onclick="showPage('myOrders', this)">📋 Đơn hàng của tôi</button>
+            <button class="cart-btn" onclick="showPage('cart', this)">🛒 Giỏ hàng <span id="cartCount">0</span></button>
+
+            <div class="user">
+                <div class="avatar" id="avatar">K</div>
+                <span id="userName">Khách</span>
+                <span class="logout" onclick="logout()">↪</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="shop" class="page active">
+            <div class="title">
+                <h1>🧁 Danh Sách Bánh Ngọt</h1>
+                <p>Chọn bánh yêu thích và đặt hàng ngay!</p>
+            </div>
+
+            <div class="search-row">
+                <input id="searchProduct" onkeyup="loadProducts()" placeholder="🔍 Tìm kiếm bánh...">
+                <button class="filter active" onclick="setFilter('Tất cả', this)">Tất cả</button>
+                <button class="filter" onclick="setFilter('Bánh kem', this)">Bánh kem</button>
+                <button class="filter" onclick="setFilter('Bánh gato', this)">Bánh gato</button>
+                <button class="filter" onclick="setFilter('Bánh mousse', this)">Bánh mousse</button>
+                <button class="filter" onclick="setFilter('Bánh cupcake', this)">Bánh cupcake</button>
+                <button class="filter" onclick="setFilter('Bánh macaron', this)">Bánh macaron</button>
+                <button class="filter" onclick="setFilter('Bánh donut', this)">Bánh donut</button>
+            </div>
+
+            <div class="product-grid" id="productGrid"></div>
+        </section>
+        <section id="cart" class="page">
+            <div class="title">
+                <h1>🛒 Giỏ Hàng</h1>
+                <p>Danh sách bánh bạn đã chọn</p>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tên bánh</th>
+                        <th>Loại</th>
+                        <th>Đơn giá</th>
+                        <th>Số lượng</th>
+                        <th>Thành tiền</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="cartTable"></tbody>
+            </table>
+
+            <div class="checkout">
+                <h2 id="cartTotal">0đ</h2>
+                <button onclick="checkout()">Đặt hàng</button>
+            </div>
+        </section>
+
+        <section id="myOrders" class="page">
+            <div class="title">
+                <h1>📋 Đơn Hàng Của Tôi</h1>
+                <p>Theo dõi các đơn hàng đã đặt</p>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã đơn</th>
+                        <th>Ngày đặt</th>
+                        <th>Sản phẩm</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody id="myOrderTable"></tbody>
+            </table>
+        </section>
+    </main>
+
+    <script>
+        if (localStorage.getItem("isLogin") !== "true") {
+            window.location.href = "index.html";
+        }
+
+        const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+        document.getElementById("userName").innerText = currentUser.taiKhoan || "Khách";
+        document.getElementById("avatar").innerText = (currentUser.taiKhoan || "K")[0].toUpperCase();
+
+        let currentFilter = "Tất cả";
+
+        let products = JSON.parse(localStorage.getItem("products")) || [
+            {
+                ma: "BN001",
+                ten: "Bánh Kem Dâu Tây",
+                loai: "Bánh kem",
+                gia: 285000,
+                ton: 15,
+                moTa: "Bánh kem mềm mịn phủ đầy dâu tây tươi, vị thanh ngọt",
+                img: "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?q=80&w=800"
+            },
+            {
+                ma: "BN002",
+                ten: "Bánh Sinh Nhật Socola",
+                loai: "Bánh gato",
+                gia: 320000,
+                ton: 8,
+                moTa: "Bánh gato socola đen đậm đà, phủ kem tươi béo ngậy",
+                img: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?q=80&w=800"
+            },
+            {
+                ma: "BN003",
+                ten: "Bánh Tiramisu",
+                loai: "Bánh mousse",
+                gia: 350000,
+                ton: 6,
+                moTa: "Bánh tiramisu kiểu Ý, thơm ngon với cà phê espresso",
+              img: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?q=80&w=800"
+            },
+            {
+                ma: "BN004",
+                ten: "Bánh Cupcake Hồng",
+                loai: "Bánh cupcake",
+                gia: 45000,
+                ton: 42,
+                moTa: "Cupcake vị vani phủ kem hồng ngọt ngào",
+                img: "https://images.unsplash.com/photo-1486427944299-d1955d23e34d?q=80&w=800"
+            }
+        ];
+
+        let cart = JSON.parse(localStorage.getItem("cart_" + currentUser.taiKhoan)) || [];
+        let myOrders = JSON.parse(localStorage.getItem("myOrders_" + currentUser.taiKhoan)) || [];
+
+        function showPage(id, btn) {
+            document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+            document.getElementById(id).classList.add("active");
+
+            document.querySelectorAll(".nav button").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+
+            if (id === "cart") loadCart();
+            if (id === "myOrders") loadMyOrders();
+        }
+
+        function setFilter(filter, btn) {
+            currentFilter = filter;
+
+            document.querySelectorAll(".filter").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+
+            loadProducts();
+        }
+
+        function loadProducts() {
+            const grid = document.getElementById("productGrid");
+            const keyword = document.getElementById("searchProduct").value.toLowerCase();
+
+            let list = products;
+
+            if (currentFilter !== "Tất cả") {
+                list = list.filter(p => p.loai === currentFilter);
+            }
+
+            if (keyword !== "") {
+                list = list.filter(p => p.ten.toLowerCase().includes(keyword));
+            }
+
+            grid.innerHTML = list.map(p => `
+                <div class="product-card">
+                    <div class="product-img">
+                        <img src="${p.img}">
+                        <span class="tag">${p.loai}</span>
+                    </div>
+
+                    <div class="product-body">
+                        <h3>${p.ten}</h3>
+                        <p>${p.moTa}</p>
+
+                        <div class="price-row">
+                            <span class="price">${formatMoney(p.gia)}</span>
+                            <span class="stock">Còn: ${p.ton}</span>
+                        </div>
+
+                        <button class="add-btn" onclick="addToCart('${p.ma}')">
+                            🛒 Thêm vào giỏ
+                        </button>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        function addToCart(ma) {
+            const product = products.find(p => p.ma === ma);
+            const item = cart.find(c => c.ma === ma);
+
+            if (item) {
+                item.soLuong++;
+            } else {
+                cart.push({
+                  ma: product.ma,
+                    ten: product.ten,
+                    loai: product.loai,
+                    gia: product.gia,
+                    soLuong: 1
+                });
+            }
+
+            saveCart();
+            alert("Đã thêm vào giỏ hàng");
+        }
+
+        function saveCart() {
+            localStorage.setItem("cart_" + currentUser.taiKhoan, JSON.stringify(cart));
+            updateCartCount();
+        }
+
+        function updateCartCount() {
+            const count = cart.reduce((sum, item) => sum + item.soLuong, 0);
+            document.getElementById("cartCount").innerText = count;
+        }
+
+        function loadCart() {
+            const tbody = document.getElementById("cartTable");
+
+            if (cart.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align:center; padding:25px;">Giỏ hàng trống</td>
+                    </tr>
+                `;
+                document.getElementById("cartTotal").innerText = "0đ";
+                return;
+            }
+
+            tbody.innerHTML = cart.map(item => `
+                <tr>
+                    <td>${item.ten}</td>
+                    <td>${item.loai}</td>
+                    <td>${formatMoney(item.gia)}</td>
+                    <td>
+                        <button onclick="changeQty('${item.ma}', -1)">-</button>
+                        ${item.soLuong}
+                        <button onclick="changeQty('${item.ma}', 1)">+</button>
+                    </td>
+                    <td class="price">${formatMoney(item.gia * item.soLuong)}</td>
+                    <td>
+                        <button class="btn-small delete" onclick="removeCart('${item.ma}')">Xóa</button>
+                    </td>
+                </tr>
+            `).join("");
+
+            const total = cart.reduce((sum, item) => sum + item.gia * item.soLuong, 0);
+            document.getElementById("cartTotal").innerText = formatMoney(total);
+        }
+
+        function changeQty(ma, amount) {
+            const item = cart.find(c => c.ma === ma);
+            if (!item) return;
+
+            item.soLuong += amount;
+
+            if (item.soLuong <= 0) {
+                cart = cart.filter(c => c.ma !== ma);
+            }
+
+            saveCart();
+            loadCart();
+        }
+
+        function removeCart(ma) {
+            cart = cart.filter(c => c.ma !== ma);
+            saveCart();
+            loadCart();
+        }
+
+        function checkout() {
+    if (cart.length === 0) {
+        alert("Giỏ hàng đang trống");
+        return;
+    }
+
+    const total = cart.reduce((sum, item) => sum + item.gia * item.soLuong, 0);
+
+    // Lấy danh sách đơn hàng chung của chủ cửa hàng
+    let allOrders = JSON.parse(localStorage.getItem("orders")) || [];
+
+    // Tạo mã đơn mới
+    const maDonMoi = "DH" + String(allOrders.length + 1).padStart(3, "0");
+          const ngayDat = new Date().toLocaleDateString("vi-VN");
+
+    const sanPhamText = cart.map(c => `${c.ten} x${c.soLuong}`).join(", ");
+
+    // Đơn hàng cho khách xem
+    const orderForCustomer = {
+        ma: maDonMoi,
+        ngay: ngayDat,
+        sanPham: sanPhamText,
+        tongTien: total,
+        trangThai: "Chờ xác nhận"
+    };
+
+    // Đơn hàng cho chủ cửa hàng quản lý
+    const orderForOwner = {
+        ma: maDonMoi,
+        khach: currentUser.hoTen || currentUser.taiKhoan || "Khách hàng",
+        sdt: currentUser.sdt || "Chưa có",
+        ngay: ngayDat,
+        sanPham: sanPhamText,
+        tongTien: total,
+        trangThai: "Chờ xác nhận"
+    };
+
+    // Lưu đơn cho khách
+    myOrders.push(orderForCustomer);
+    localStorage.setItem("myOrders_" + currentUser.taiKhoan, JSON.stringify(myOrders));
+
+    // Lưu đơn chung cho chủ
+    allOrders.push(orderForOwner);
+    localStorage.setItem("orders", JSON.stringify(allOrders));
+
+    // Xóa giỏ hàng sau khi đặt
+    cart = [];
+    saveCart();
+
+    alert("Đặt hàng thành công! Đơn hàng đã được gửi đến cửa hàng.");
+
+    loadCart();
+}
+        function loadMyOrders() {
+            const tbody = document.getElementById("myOrderTable");
+
+            if (myOrders.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align:center; padding:25px;">Chưa có đơn hàng</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = myOrders.map(o => `
+                <tr>
+                    <td>${o.ma}</td>
+                    <td>${o.ngay}</td>
+                    <td>${o.sanPham}</td>
+                    <td class="price">${formatMoney(o.tongTien)}</td>
+                    <td><span class="status">${o.trangThai}</span></td>
+                </tr>
+            `).join("");
+        }
+
+        function logout() {
+            localStorage.removeItem("isLogin");
+            localStorage.removeItem("currentUser");
+            window.location.href = "index.html";
+        }
+
+        function formatMoney(number) {
+            return Number(number).toLocaleString("vi-VN") + "đ";
+        }
+
+        loadProducts();
+        updateCartCount();
+    </script>
+</body>
+</html>
