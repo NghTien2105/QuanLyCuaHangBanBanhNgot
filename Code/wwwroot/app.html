@@ -1,0 +1,1870 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Hệ thống quản lý bán bánh ngọt</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #fff7f4;
+            color: #2b0d05;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: #fff0e8;
+            border-right: 1px solid #f0d7cc;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 25px 18px;
+            border-bottom: 1px solid #efd8cd;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 13px;
+            background: #d9546f;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+        }
+
+        .brand h3 {
+            margin: 0;
+            color: #d9546f;
+            font-size: 15px;
+            line-height: 18px;
+        }
+
+        .menu {
+            padding: 16px;
+        }
+
+        .menu button {
+            width: 100%;
+            border: none;
+            background: transparent;
+            text-align: left;
+            padding: 14px 16px;
+            border-radius: 13px;
+            margin-bottom: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            color: #2b0d05;
+        }
+
+        .menu button.active {
+            background: #d9546f;
+            color: white;
+            font-weight: bold;
+        }
+
+        .logout {
+            padding: 18px;
+            border-top: 1px solid #efd8cd;
+        }
+
+        .logout button {
+            border: none;
+            background: transparent;
+            color: #d9546f;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .main {
+            flex: 1;
+            padding: 28px 24px;
+            overflow-x: auto;
+        }
+
+        .page-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .page-title h1 {
+            margin: 0;
+            font-size: 26px;
+        }
+
+        .page-title p {
+            margin: 6px 0 0;
+            color: #9b6a5a;
+        }
+
+        .btn-primary {
+            background: #d9546f;
+            color: white;
+            border: none;
+            padding: 13px 22px;
+            border-radius: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .search-row {
+            display: flex;
+            gap: 10px;
+          margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .search-row input {
+            width: 330px;
+            padding: 14px;
+            border-radius: 14px;
+            border: 1px solid #f0d7cc;
+            background: white;
+        }
+
+        .filter {
+            border: 1px solid #f0d7cc;
+            background: white;
+            padding: 12px 18px;
+            border-radius: 14px;
+            cursor: pointer;
+        }
+
+        .filter.active {
+            background: #d9546f;
+            color: white;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+        th {
+            background: #f3e3d8;
+            color: #9b6a5a;
+            text-align: left;
+            padding: 15px;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 14px 15px;
+            border-bottom: 1px solid #f0e0d7;
+            font-size: 14px;
+        }
+
+        .price {
+            color: #d9546f;
+            font-weight: bold;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .green {
+            background: #d8f8e8;
+            color: #007a3d;
+        }
+
+        .yellow {
+            background: #fff3c4;
+            color: #9c7400;
+        }
+
+        .red {
+            background: #ffdada;
+            color: #c62828;
+        }
+
+        .blue {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .action-btn {
+            border: none;
+            padding: 8px 13px;
+            border-radius: 10px;
+            margin-right: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .edit {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .delete {
+            background: #ffe0e0;
+            color: #c62828;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 20px;
+            border: 1px solid #f0d7cc;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+        .card h2 {
+            margin: 12px 0 5px;
+            font-size: 24px;
+        }
+
+        .card p {
+            color: #9b6a5a;
+            margin: 0;
+        }
+
+        .chart-box {
+            background: white;
+            border-radius: 14px;
+            padding: 22px;
+            border: 1px solid #f0d7cc;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+        .bars {
+          display: flex;
+            align-items: flex-end;
+            gap: 32px;
+            height: 220px;
+            border-left: 1px solid #aaa;
+            border-bottom: 1px solid #aaa;
+            padding-left: 25px;
+            margin-top: 25px;
+        }
+
+        .bar-wrap {
+            text-align: center;
+            color: #9b6a5a;
+        }
+
+        .bar {
+            width: 50px;
+            background: #d9546f;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 1100px) {
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .sidebar {
+                width: 220px;
+            }
+        }
+        .modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal-box {
+    width: 520px;
+    background: white;
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+}
+
+.modal-box h2 {
+    margin-top: 0;
+    color: #d9546f;
+}
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #f0d7cc;
+    border-radius: 12px;
+    background: #fff8f5;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.btn-cancel {
+    background: #f5ded6;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-save {
+    background: #d9546f;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.product-thumb {
+    width: 55px;
+    height: 55px;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div>
+                <div class="brand">
+                    <div class="brand-icon">🍰</div>
+                    <div>
+                        <h3>HỆ THỐNG QUẢN LÝ<br>BÁN BÁNH NGỌT</h3>
+                    </div>
+                </div>
+
+                <div class="menu">
+                    <button class="active" onclick="showPage('dashboard', this)">▦ Tổng quan</button>
+                    <button onclick="showPage('products', this)">🧁 Quản lý bánh ngọt</button>
+                    <button onclick="showPage('orders', this)">📋 Đơn hàng</button>
+                    <button onclick="showPage('customers', this)">👥 Khách hàng</button>
+                    <button onclick="showPage('inventory', this)">📦 Kho nguyên liệu</button>
+                    <button onclick="showPage('revenue', this)">📊 Thống kê doanh thu</button>
+                    <button onclick="showPage('employees', this)">👤 Nhân viên</button>
+                </div>
+            </div>
+
+            <div class="logout">
+              <button onclick="dangXuat()">↪ Đăng xuất</button>
+            </div>
+        </aside>
+
+        <main class="main" id="content"></main>
+    </div>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem("currentUser")) || {};
+
+if (localStorage.getItem("isLogin") !== "true") {
+    window.location.href = "index.html";
+}
+
+if (user.vaiTro === "Khách hàng") {
+    window.location.href = "customer.html";
+}
+        const content = document.getElementById("content");
+
+        function showPage(page, btn) {
+            document.querySelectorAll(".menu button").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+
+            if (page === "dashboard") renderDashboard();
+            if (page === "products") renderProducts();
+            if (page === "orders") renderOrders();
+            if (page === "customers") renderCustomers();
+            if (page === "inventory") renderInventory();
+            if (page === "revenue") renderRevenue();
+            if (page === "employees") renderEmployees();
+        }
+
+        function renderDashboard() {
+            content.innerHTML = `
+                <div class="page-title">
+                    <div>
+                        <h1>📊 Tổng Quan Hệ Thống</h1>
+                        <p>Thứ Bảy, 13/06/2026 · Tiệm Bánh Ngọt Hương Vị Việt</p>
+                    </div>
+                </div>
+
+                <div class="cards">
+                    <div class="card"><h2>12</h2><p>Tổng sản phẩm</p></div>
+                    <div class="card"><h2>1.243</h2><p>Tổng đơn hàng</p></div>
+                    <div class="card"><h2>387</h2><p>Khách hàng</p></div>
+                    <div class="card"><h2>1.890.000đ</h2><p>Doanh thu hôm nay</p></div>
+                    <div class="card"><h2>52 triệu đ</h2><p>Doanh thu tháng 6</p></div>
+                </div>
+
+                <div class="chart-box">
+                    <h3>📊 Doanh Thu Theo Tháng</h3>
+                    <div class="bars">
+                        <div class="bar-wrap"><div class="bar" style="height:90px"></div>T1</div>
+                        <div class="bar-wrap"><div class="bar" style="height:75px"></div>T2</div>
+                        <div class="bar-wrap"><div class="bar" style="height:120px"></div>T3</div>
+                        <div class="bar-wrap"><div class="bar" style="height:105px"></div>T4</div>
+                        <div class="bar-wrap"><div class="bar" style="height:135px"></div>T5</div>
+                        <div class="bar-wrap"><div class="bar" style="height:160px"></div>T6</div>
+                    </div>
+                </div>
+            `;
+        }
+      let currentProductFilter = "Tất cả";
+
+let products = JSON.parse(localStorage.getItem("products")) || [
+    {
+        ma: "BN001",
+        ten: "Bánh Kem Dâu Tây",
+        loai: "Bánh kem",
+        gia: 285000,
+        ton: 15,
+        moTa: "Bánh kem mềm mịn phủ dâu tươi",
+        trangThai: "Còn hàng",
+        img: "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?q=80&w=800"
+    },
+    {
+        ma: "BN002",
+        ten: "Bánh Sinh Nhật Socola",
+        loai: "Bánh gato",
+        gia: 320000,
+        ton: 8,
+        moTa: "Bánh gato socola đậm đà",
+        trangThai: "Còn hàng",
+        img: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?q=80&w=800"
+    },
+    {
+        ma: "BN003",
+        ten: "Bánh Tiramisu",
+        loai: "Bánh mousse",
+        gia: 350000,
+        ton: 6,
+        moTa: "Bánh tiramisu kiểu Ý",
+        trangThai: "Còn hàng",
+        img: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?q=80&w=800"
+    },
+    {
+        ma: "BN004",
+        ten: "Bánh Cupcake Hồng",
+        loai: "Bánh cupcake",
+        gia: 45000,
+        ton: 42,
+        moTa: "Cupcake vị vani phủ kem hồng",
+        trangThai: "Còn hàng",
+        img: "https://images.unsplash.com/photo-1486427944299-d1955d23e34d?q=80&w=800"
+    },
+    {
+        ma: "BN005",
+        ten: "Bánh Donut Dâu",
+        loai: "Bánh donut",
+        gia: 35000,
+        ton: 20,
+        moTa: "Donut phủ kem dâu",
+        trangThai: "Còn hàng",
+        img: "https://images.unsplash.com/photo-1551024601-bec78aea704b?q=80&w=800"
+    }
+];
+
+function renderProducts() {
+    content.innerHTML = `
+        <div class="page-title">
+            <div>
+                <h1>🧁 Quản Lý Bánh Ngọt</h1>
+                <p>Danh sách và quản lý sản phẩm bánh</p>
+            </div>
+            <button class="btn-primary" onclick="openProductModal()">+ Thêm bánh mới</button>
+        </div>
+
+        <div class="search-row">
+            <input id="searchProduct" onkeyup="loadProductTable()" placeholder="🔍 Tìm kiếm theo tên, mã bánh...">
+
+            <button class="filter ${currentProductFilter === 'Tất cả' ? 'active' : ''}" onclick="setProductFilter('Tất cả')">Tất cả</button>
+            <button class="filter ${currentProductFilter === 'Bánh kem' ? 'active' : ''}" onclick="setProductFilter('Bánh kem')">Bánh kem</button>
+            <button class="filter ${currentProductFilter === 'Bánh gato' ? 'active' : ''}" onclick="setProductFilter('Bánh gato')">Bánh gato</button>
+            <button class="filter ${currentProductFilter === 'Bánh mousse' ? 'active' : ''}" onclick="setProductFilter('Bánh mousse')">Bánh mousse</button>
+            <button class="filter ${currentProductFilter === 'Bánh cupcake' ? 'active' : ''}" onclick="setProductFilter('Bánh cupcake')">Bánh cupcake</button>
+            document.getElementById("loaiBanh").value = "Bánh kem";
+    document.getElementById("giaBan").value = "";
+    document.getElementById("tonKho").value = "";
+    document.getElementById("moTa").value = "";
+    document.getElementById("hinhAnhBanh").value = "";
+}
+
+function saveProduct() {
+    const ma = document.getElementById("maBanh").value.trim();
+    const ten = document.getElementById("tenBanh").value.trim();
+    const loai = document.getElementById("loaiBanh").value;
+    const gia = Number(document.getElementById("giaBan").value);
+    const ton = Number(document.getElementById("tonKho").value);
+    const moTa = document.getElementById("moTa").value.trim();
+    const img = document.getElementById("hinhAnhBanh").value.trim();
+
+    if (ma === "" || ten === "" || gia <= 0 || ton < 0) {
+        alert("Vui lòng nhập đầy đủ thông tin bánh");
+        return;
+    }
+
+    const isExist = products.some(p => p.ma === ma);
+
+    if (isExist) {
+        alert("Mã bánh đã tồn tại");
+        return;
+    }
+
+   products.push({
+    ma: ma,
+    ten: ten,
+    loai: loai,
+    gia: gia,
+    ton: ton,
+    moTa: moTa,
+    trangThai: ton > 0 ? "Còn hàng" : "Hết hàng",
+    img: img || "https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=800"
+});
+
+localStorage.setItem("products", JSON.stringify(products));
+    closeProductModal();
+    renderProducts();
+    alert("Thêm bánh mới thành công");
+}
+
+function deleteProduct(ma) {
+    const confirmDelete = confirm("Bạn có chắc muốn xóa bánh này không?");
+
+    if (!confirmDelete) return;
+
+    products = products.filter(p => p.ma !== ma);
+    renderProducts();
+}
+
+function editProduct(ma) {
+    const product = products.find(p => p.ma === ma);
+
+    if (!product) return;
+
+    const tenMoi = prompt("Nhập tên bánh mới:", product.ten);
+    const giaMoi = prompt("Nhập giá bán mới:", product.gia);
+    const tonMoi = prompt("Nhập số lượng tồn mới:", product.ton);
+
+    if (tenMoi === null || giaMoi === null || tonMoi === null) return;
+
+    product.ten = tenMoi;
+    product.gia = Number(giaMoi);
+    product.ton = Number(tonMoi);
+    product.trangThai = product.ton > 0 ? "Còn hàng" : "Hết hàng";
+
+    renderProducts();
+}
+
+function formatMoney(number) {
+    return Number(number).toLocaleString("vi-VN") + "đ";
+}
+
+        let currentOrderFilter = "Tất cả";
+
+let orders = JSON.parse(localStorage.getItem("orders")) || [
+    {
+        ma: "DH001",
+        khach: "Nguyễn Thị Lan",
+        sdt: "0901234567",
+        ngay: "13/06/2026",
+        sanPham: "Bánh kem dâu tây x1",
+        tongTien: 285000,
+        trangThai: "Đã giao"
+    },
+    {
+        ma: "DH002",
+        khach: "Trần Văn Minh",
+        sdt: "0912345678",
+        ngay: "13/06/2026",
+        sanPham: "Bánh socola x2",
+        tongTien: 640000,
+        trangThai: "Đang chuẩn bị"
+    },
+    {
+        ma: "DH003",
+        khach: "Lê Thị Hoa",
+        sdt: "0923456789",
+        ngay: "13/06/2026",
+        sanPham: "Bánh cupcake hồng x6",
+        tongTien: 270000,
+        trangThai: "Chờ xác nhận"
+    },
+    {
+        ma: "DH004",
+        khach: "Phạm Đình Tùng",
+        sdt: "0934567890",
+        ngay: "12/06/2026",
+        sanPham: "Bánh tiramisu x1",
+        tongTien: 350000,
+        trangThai: "Đã giao"
+    },
+    {
+        ma: "DH005",
+        khach: "Võ Thị Mai",
+        sdt: "0945678901",
+        ngay: "12/06/2026",
+        sanPham: "Bánh kem dâu x1",
+        tongTien: 285000,
+        trangThai: "Đã hủy"
+    }
+];
+
+function saveOrdersToLocal() {
+    localStorage.setItem("orders", JSON.stringify(orders));
+}
+
+function renderOrders() {
+    content.innerHTML = `
+        <div class="page-title">
+            <div>
+                <h1>📋 Quản Lý Đơn Hàng</h1>
+                <p>Theo dõi và xử lý đơn đặt bánh</p>
+            </div>
+            <button class="btn-primary" onclick="openOrderModal()">+ Tạo đơn hàng</button>
+        </div>
+
+        <div class="search-row">
+            <input id="searchOrder" onkeyup="loadOrderTable()" placeholder="🔍 Tìm theo mã đơn, tên khách...">
+
+            <button class="filter ${currentOrderFilter === 'Tất cả' ? 'active' : ''}" onclick="setOrderFilter('Tất cả')">
+                Tất cả
+            </button>
+
+            <button class="filter ${currentOrderFilter === 'Chờ xác nhận' ? 'active' : ''}" onclick="setOrderFilter('Chờ xác nhận')">
+                Chờ xác nhận
+            </button>
+
+            <button class="filter ${currentOrderFilter === 'Đang chuẩn bị' ? 'active' : ''}" onclick="setOrderFilter('Đang chuẩn bị')">
+                Đang chuẩn bị
+            </button>
+
+            <button class="filter ${currentOrderFilter === 'Đã giao' ? 'active' : ''}" onclick="setOrderFilter('Đã giao')">
+                Đã giao
+            </button>
+
+            <button class="filter ${currentOrderFilter === 'Đã hủy' ? 'active' : ''}" onclick="setOrderFilter('Đã hủy')">
+                Đã hủy
+            </button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã đơn</th>
+                    <th>Khách hàng</th>
+                    <th>Số điện thoại</th>
+                    <th>Ngày đặt</th>
+                    <th>Sản phẩm</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="orderTableBody"></tbody>
+        </table>
+    `;
+
+    loadOrderTable();
+}
+
+function loadOrderTable() {
+    const tbody = document.getElementById("orderTableBody");
+    const searchInput = document.getElementById("searchOrder");
+    const keyword = searchInput ? searchInput.value.toLowerCase() : "";
+
+    let filteredOrders = orders;
+
+    if (currentOrderFilter !== "Tất cả") {
+    filteredOrders = filteredOrders.filter(o => o.trangThai === currentOrderFilter);
+    }
+
+    if (keyword !== "") {
+        filteredOrders = filteredOrders.filter(o =>
+            o.ma.toLowerCase().includes(keyword) ||
+            o.khach.toLowerCase().includes(keyword) ||
+            o.sdt.includes(keyword)
+        );
+    }
+
+    if (filteredOrders.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="8" style="text-align:center; padding:25px; color:#9b6a5a;">
+                    Không có đơn hàng phù hợp
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    tbody.innerHTML = filteredOrders.map(o => `
+        <tr>
+            <td>${o.ma}</td>
+            <td><b>${o.khach}</b></td>
+            <td>${o.sdt}</td>
+            <td>${o.ngay}</td>
+            <td>${o.sanPham}</td>
+            <td class="price">${formatMoney(o.tongTien)}</td>
+            <td>
+                <span class="status ${getOrderStatusClass(o.trangThai)}">
+                    ${o.trangThai}
+                </span>
+            </td>
+            <td>
+                <button class="action-btn edit" onclick="xemOrder('${o.ma}')">Xem</button>
+                <button class="action-btn delete" onclick="deleteOrder('${o.ma}')">Xóa</button>
+            </td>
+        </tr>
+    `).join("");
+}
+
+function setOrderFilter(status) {
+    currentOrderFilter = status;
+    renderOrders();
+}
+
+function openOrderModal() {
+    document.getElementById("orderModal").style.display = "flex";
+    capNhatGiaDonHang();
+}
+
+function closeOrderModal() {
+    document.getElementById("orderModal").style.display = "none";
+
+    document.getElementById("maDon").value = "";
+    document.getElementById("tenKhach").value = "";
+    document.getElementById("sdtKhach").value = "";
+    document.getElementById("sanPhamDon").selectedIndex = 0;
+    document.getElementById("soLuongDon").value = 1;
+    document.getElementById("trangThaiDon").value = "Chờ xác nhận";
+    capNhatGiaDonHang();
+}
+
+function capNhatGiaDonHang() {
+    const select = document.getElementById("sanPhamDon");
+    const selectedOption = select.options[select.selectedIndex];
+    const gia = Number(selectedOption.getAttribute("data-price"));
+    const soLuong = Number(document.getElementById("soLuongDon").value);
+
+    const tongTien = gia * soLuong;
+
+    document.getElementById("tongTienDon").value = formatMoney(tongTien);
+}
+
+function saveOrder() {
+    const ma = document.getElementById("maDon").value.trim();
+    const khach = document.getElementById("tenKhach").value.trim();
+    const sdt = document.getElementById("sdtKhach").value.trim();
+    const select = document.getElementById("sanPhamDon");
+    const sanPham = select.value;
+    const gia = Number(select.options[select.selectedIndex].getAttribute("data-price"));
+    const soLuong = Number(document.getElementById("soLuongDon").value);
+    const trangThai = document.getElementById("trangThaiDon").value;
+
+    if (ma === "" || khach === "" || sdt === "" || soLuong <= 0) {
+        alert("Vui lòng nhập đầy đủ thông tin đơn hàng");
+        return;
+    }
+
+    const isExist = orders.some(o => o.ma === ma);
+
+    if (isExist) {
+        alert("Mã đơn hàng đã tồn tại");
+        return;
+    }
+
+    const today = new Date();
+    const ngay =
+        String(today.getDate()).padStart(2, "0") + "/" +
+        String(today.getMonth() + 1).padStart(2, "0") + "/" +
+        today.getFullYear();
+
+    orders.push({
+        ma: ma,
+        khach: khach,
+        sdt: sdt,
+        ngay: ngay,
+        sanPham: `${sanPham} x${soLuong}`,
+        tongTien: gia * soLuong,
+        trangThai: trangThai
+    });
+
+    saveOrdersToLocal();
+    closeOrderModal();
+    renderOrders();
+
+    alert("Tạo đơn hàng thành công");
+}
+
+function deleteOrder(ma) {
+    const confirmDelete = confirm("Bạn có chắc muốn xóa đơn hàng này không?");
+
+    if (!confirmDelete) return;
+
+    orders = orders.filter(o => o.ma !== ma);
+    saveOrdersToLocal();
+    renderOrders();
+}
+
+function xemOrder(ma) {
+    const order = orders.find(o => o.ma === ma);
+
+    if (!order) return;
+
+    alert(
+        "Mã đơn: " + order.ma +
+        "\nKhách hàng: " + order.khach +
+        "\nSĐT: " + order.sdt +
+        "\nSản phẩm: " + order.sanPham +
+        "\nTổng tiền: " + formatMoney(order.tongTien) +
+        "\nTrạng thái: " + order.trangThai
+    );
+}
+
+function getOrderStatusClass(status) {
+    if (status === "Đã giao") return "green";
+    if (status === "Đang chuẩn bị") return "yellow";
+    if (status === "Đã hủy") return "red";
+    return "blue";
+}
+
+        let customers = JSON.parse(localStorage.getItem("customers")) || [
+    {
+        ma: "KH001",
+        hoTen: "Nguyễn Thị Lan",
+        sdt: "0901234567",
+        diaChi: "123 Lê Lợi, Q.1, TP.HCM",
+        soDon: 12,
+        tongChiTieu: 3420000,
+        ngayThamGia: "15/01/2025"
+    },
+    {
+        ma: "KH002",
+        hoTen: "Trần Văn Minh",
+        sdt: "0912345678",
+        diaChi: "45 Nguyễn Huệ, Q.1, TP.HCM",
+        soDon: 8,
+        tongChiTieu: 2640000,
+        ngayThamGia: "20/02/2025"
+    },
+    {
+        ma: "KH003",
+        hoTen: "Lê Thị Hoa",
+        sdt: "0923456789",
+        diaChi: "78 Trần Hưng Đạo, Q.5, TP.HCM",
+        soDon: 5,
+        tongChiTieu: 1350000,
+        ngayThamGia: "10/03/2025"
+    }
+];
+
+function saveCustomersToLocal() {
+    localStorage.setItem("customers", JSON.stringify(customers));
+}
+
+function renderCustomers() {
+    content.innerHTML = `
+        <div class="page-title">
+            <div>
+                <h1>👥 Quản Lý Khách Hàng</h1>
+                <p>Tổng cộng ${customers.length} khách hàng</p>
+            </div>
+            <button class="btn-primary" onclick="openCustomerModal()">+ Thêm khách hàng</button>
+        </div>
+
+        <div class="search-row">
+                  <input id="searchCustomer" onkeyup="loadCustomerTable()" placeholder="🔍 Tìm theo tên, số điện thoại, mã khách hàng...">
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Mã KH</th>
+                    <th>Họ và tên</th>
+                    <th>Số điện thoại</th>
+                    <th>Địa chỉ</th>
+                    <th>Số đơn hàng</th>
+                    <th>Tổng chi tiêu</th>
+                    <th>Ngày tham gia</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="customerTableBody"></tbody>
+        </table>
+    `;
+
+    loadCustomerTable();
+}
+
+function loadCustomerTable() {
+    const tbody = document.getElementById("customerTableBody");
+    const searchInput = document.getElementById("searchCustomer");
+    const keyword = searchInput ? searchInput.value.toLowerCase() : "";
+
+    let filteredCustomers = customers;
+
+    if (keyword !== "") {
+        filteredCustomers = filteredCustomers.filter(c =>
+            c.ma.toLowerCase().includes(keyword) ||
+            c.hoTen.toLowerCase().includes(keyword) ||
+            c.sdt.includes(keyword)
+        );
+    }
+
+    if (filteredCustomers.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align:center; padding:25px; color:#9b6a5a;">
+                    Không có khách hàng phù hợp
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    tbody.innerHTML = filteredCustomers.map((c, index) => `
+        <tr>
+            <td>${index + 1}</td>
+            <td>${c.ma}</td>
+            <td><b>${c.hoTen}</b></td>
+            <td>${c.sdt}</td>
+            <td>${c.diaChi}</td>
+            <td>${c.soDon}</td>
+            <td class="price">${formatMoney(c.tongChiTieu)}</td>
+            <td>${c.ngayThamGia}</td>
+            <td>
+                <button class="action-btn edit" onclick="editCustomer('${c.ma}')">Sửa</button>
+                <button class="action-btn delete" onclick="deleteCustomer('${c.ma}')">Xóa</button>
+            </td>
+        </tr>
+    `).join("");
+}
+
+function openCustomerModal() {
+    document.getElementById("customerModal").style.display = "flex";
+}
+
+function closeCustomerModal() {
+    document.getElementById("customerModal").style.display = "none";
+
+    document.getElementById("maKH").value = "";
+    document.getElementById("hoTenKH").value = "";
+    document.getElementById("sdtKH").value = "";
+    document.getElementById("diaChiKH").value = "";
+    document.getElementById("soDonKH").value = 0;
+    document.getElementById("tongChiTieuKH").value = 0;
+    document.getElementById("ngayThamGiaKH").value = "";
+}
+
+function saveCustomer() {
+    const ma = document.getElementById("maKH").value.trim();
+    const hoTen = document.getElementById("hoTenKH").value.trim();
+    const sdt = document.getElementById("sdtKH").value.trim();
+    const diaChi = document.getElementById("diaChiKH").value.trim();
+    const soDon = Number(document.getElementById("soDonKH").value);
+    const tongChiTieu = Number(document.getElementById("tongChiTieuKH").value);
+    const ngayInput = document.getElementById("ngayThamGiaKH").value;
+
+    if (ma === "" || hoTen === "" || sdt === "" || diaChi === "" || ngayInput === "") {
+        alert("Vui lòng nhập đầy đủ thông tin khách hàng");
+        return;
+    }
+
+    const isExist = customers.some(c => c.ma === ma);
+
+    if (isExist) {
+        alert("Mã khách hàng đã tồn tại");
+        return;
+    }
+
+    const parts = ngayInput.split("-");
+    const ngayThamGia = `${parts[2]}/${parts[1]}/${parts[0]}`;
+
+    customers.push({
+        ma: ma,
+        hoTen: hoTen,
+        sdt: sdt,
+        diaChi: diaChi,
+        soDon: soDon,
+        tongChiTieu: tongChiTieu,
+        ngayThamGia: ngayThamGia
+    });
+
+    saveCustomersToLocal();
+    closeCustomerModal();
+    renderCustomers();
+
+    alert("Thêm khách hàng thành công");
+}
+
+function deleteCustomer(ma) {
+    const confirmDelete = confirm("Bạn có chắc muốn xóa khách hàng này không?");
+
+    if (!confirmDelete) return;
+
+    customers = customers.filter(c => c.ma !== ma);
+    saveCustomersToLocal();
+    renderCustomers();
+}
+
+function editCustomer(ma) {
+    const customer = customers.find(c => c.ma === ma);
+
+    if (!customer) return;
+
+    const hoTenMoi = prompt("Nhập họ tên mới:", customer.hoTen);
+    const sdtMoi = prompt("Nhập số điện thoại mới:", customer.sdt);
+    const diaChiMoi = prompt("Nhập địa chỉ mới:", customer.diaChi);
+
+    if (hoTenMoi === null || sdtMoi === null || diaChiMoi === null) return;
+
+    customer.hoTen = hoTenMoi;
+    customer.sdt = sdtMoi;
+    customer.diaChi = diaChiMoi;
+
+    saveCustomersToLocal();
+    renderCustomers();
+}
+
+        let currentInventoryFilter = "Tất cả";
+
+let inventories = JSON.parse(localStorage.getItem("inventories")) || [
+    {
+        ma: "NL001",
+        ten: "Bột mì",
+        loai: "Nguyên liệu khô",
+        donVi: "kg",
+        soLuongTon: 25,
+        mucCanhBao: 5
+    },
+    {
+        ma: "NL002",
+        ten: "Đường",
+        loai: "Nguyên liệu khô",
+        donVi: "kg",
+        soLuongTon: 18,
+        mucCanhBao: 5
+    },
+    {
+        ma: "NL003",
+        ten: "Trứng gà",
+        loai: "Nguyên liệu tươi",
+        donVi: "quả",
+        soLuongTon: 120,
+        mucCanhBao: 20
+    },
+    {
+        ma: "NL004",
+        ten: "Sữa tươi",
+        loai: "Nguyên liệu tươi",
+        donVi: "lít",
+        soLuongTon: 8,
+        mucCanhBao: 3
+    },
+    {
+        ma: "NL005",
+        ten: "Việt quất",
+        loai: "Trái cây",
+        donVi: "kg",
+        soLuongTon: 1,
+        mucCanhBao: 2
+    }
+];
+
+function saveInventoriesToLocal() {
+    localStorage.setItem("inventories", JSON.stringify(inventories));
+}
+function renderInventory() {
+    content.innerHTML = `
+        <div class="page-title">
+            <div>
+                <h1>📦 Quản Lý Kho Nguyên Liệu</h1>
+                <p>Theo dõi tồn kho nguyên liệu làm bánh</p>
+            </div>
+            <button class="btn-primary" onclick="openInventoryModal()">+ Thêm nguyên liệu</button>
+        </div>
+
+        <div class="search-row">
+            <input id="searchInventory" onkeyup="loadInventoryTable()" placeholder="🔍 Tìm nguyên liệu...">
+
+            <button class="filter ${currentInventoryFilter === 'Tất cả' ? 'active' : ''}" onclick="setInventoryFilter('Tất cả')">
+                Tất cả
+            </button>
+
+            <button class="filter ${currentInventoryFilter === 'Nguyên liệu khô' ? 'active' : ''}" onclick="setInventoryFilter('Nguyên liệu khô')">
+                Nguyên liệu khô
+            </button>
+
+            <button class="filter ${currentInventoryFilter === 'Nguyên liệu tươi' ? 'active' : ''}" onclick="setInventoryFilter('Nguyên liệu tươi')">
+                Nguyên liệu tươi
+            </button>
+
+            <button class="filter ${currentInventoryFilter === 'Trái cây' ? 'active' : ''}" onclick="setInventoryFilter('Trái cây')">
+                Trái cây
+            </button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã NL</th>
+                    <th>Tên nguyên liệu</th>
+                    <th>Loại</th>
+                    <th>Đơn vị</th>
+                    <th>Số lượng tồn</th>
+                    <th>Mức cảnh báo</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="inventoryTableBody"></tbody>
+        </table>
+    `;
+
+    loadInventoryTable();
+}
+
+function loadInventoryTable() {
+    const tbody = document.getElementById("inventoryTableBody");
+    const searchInput = document.getElementById("searchInventory");
+    const keyword = searchInput ? searchInput.value.toLowerCase() : "";
+
+    let filteredInventories = inventories;
+
+    if (currentInventoryFilter !== "Tất cả") {
+        filteredInventories = filteredInventories.filter(i => i.loai === currentInventoryFilter);
+    }
+
+    if (keyword !== "") {
+        filteredInventories = filteredInventories.filter(i =>
+            i.ma.toLowerCase().includes(keyword) ||
+            i.ten.toLowerCase().includes(keyword)
+        );
+    }
+
+    if (filteredInventories.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="8" style="text-align:center; padding:25px; color:#9b6a5a;">
+                    Không có nguyên liệu phù hợp
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    tbody.innerHTML = filteredInventories.map(i => {
+        const trangThai = getInventoryStatus(i.soLuongTon, i.mucCanhBao);
+
+        return `
+  <tr>
+                <td>${i.ma}</td>
+                <td><b>${i.ten}</b></td>
+                <td>${i.loai}</td>
+                <td>${i.donVi}</td>
+                <td>${i.soLuongTon}</td>
+                <td>${i.mucCanhBao}</td>
+                <td>
+                    <span class="status ${getInventoryStatusClass(trangThai)}">
+                        ${trangThai}
+                    </span>
+                </td>
+                <td>
+                    <button class="action-btn edit" onclick="editInventory('${i.ma}')">Sửa</button>
+                    <button class="action-btn delete" onclick="deleteInventory('${i.ma}')">Xóa</button>
+                </td>
+            </tr>
+        `;
+    }).join("");
+}
+
+function setInventoryFilter(loai) {
+    currentInventoryFilter = loai;
+    renderInventory();
+}
+
+function openInventoryModal() {
+    document.getElementById("inventoryModal").style.display = "flex";
+}
+
+function closeInventoryModal() {
+    document.getElementById("inventoryModal").style.display = "none";
+
+    document.getElementById("maNL").value = "";
+    document.getElementById("tenNL").value = "";
+    document.getElementById("loaiNL").value = "Nguyên liệu khô";
+    document.getElementById("donViNL").value = "";
+    document.getElementById("soLuongTonNL").value = "";
+    document.getElementById("mucCanhBaoNL").value = "";
+}
+
+function saveInventory() {
+    const ma = document.getElementById("maNL").value.trim();
+    const ten = document.getElementById("tenNL").value.trim();
+    const loai = document.getElementById("loaiNL").value;
+    const donVi = document.getElementById("donViNL").value.trim();
+    const soLuongTon = Number(document.getElementById("soLuongTonNL").value);
+    const mucCanhBao = Number(document.getElementById("mucCanhBaoNL").value);
+
+    if (ma === "" || ten === "" || donVi === "" || soLuongTon < 0 || mucCanhBao < 0) {
+        alert("Vui lòng nhập đầy đủ thông tin nguyên liệu");
+        return;
+    }
+
+    const isExist = inventories.some(i => i.ma === ma);
+
+    if (isExist) {
+        alert("Mã nguyên liệu đã tồn tại");
+        return;
+    }
+
+    inventories.push({
+        ma: ma,
+        ten: ten,
+        loai: loai,
+        donVi: donVi,
+        soLuongTon: soLuongTon,
+        mucCanhBao: mucCanhBao
+    });
+
+    saveInventoriesToLocal();
+    closeInventoryModal();
+    renderInventory();
+
+    alert("Thêm nguyên liệu thành công");
+}
+
+function deleteInventory(ma) {
+    const confirmDelete = confirm("Bạn có chắc muốn xóa nguyên liệu này không?");
+
+    if (!confirmDelete) return;
+
+    inventories = inventories.filter(i => i.ma !== ma);
+    saveInventoriesToLocal();
+    renderInventory();
+}
+
+function editInventory(ma) {
+    const item = inventories.find(i => i.ma === ma);
+
+    if (!item) return;
+
+    const tenMoi = prompt("Nhập tên nguyên liệu mới:", item.ten);
+    const soLuongMoi = prompt("Nhập số lượng tồn mới:", item.soLuongTon);
+    const mucCanhBaoMoi = prompt("Nhập mức cảnh báo mới:", item.mucCanhBao);
+
+    if (tenMoi === null || soLuongMoi === null || mucCanhBaoMoi === null) return;
+
+    item.ten = tenMoi;
+    item.soLuongTon = Number(soLuongMoi);
+    item.mucCanhBao = Number(mucCanhBaoMoi);
+
+    saveInventoriesToLocal();
+    renderInventory();
+}
+
+function getInventoryStatus(soLuongTon, mucCanhBao) {
+    if (soLuongTon <= 0) return "Hết hàng";
+    if (soLuongTon <= mucCanhBao) return "Sắp hết";
+    return "Còn hàng";
+}
+
+function getInventoryStatusClass(status) {
+    if (status === "Còn hàng") return "green";
+    if (status === "Sắp hết") return "yellow";
+    return "red";
+}
+
+        function renderRevenue() {
+            content.innerHTML = `
+                <div class="page-title">
+                    <div>
+                        <h1>📊 Thống Kê Doanh Thu</h1>
+                        <p>Phân tích doanh thu và sản phẩm bán chạy</p>
+                    </div>
+                </div>
+
+                <div class="cards">
+                    <div class="card"><h2>237.4 triệu đ</h2><p>Tổng doanh thu 6 tháng</p></div>
+                    <div class="card"><h2>39.6 triệu đ</h2><p>Trung bình mỗi tháng</p></div>
+                    <div class="card"><h2>T6/26</h2><p>Tháng doanh thu cao nhất</p></div>
+                    <div class="card"><h2>1.243 đơn</h2><p>Tổng đơn hàng</p></div>
+                </div>
+
+                <div class="chart-box">
+                    <h3>📊 Biểu Đồ Doanh Thu</h3>
+                    <div class="bars">
+                        <div class="bar-wrap"><div class="bar" style="height:95px"></div>T1</div>
+                        <div class="bar-wrap"><div class="bar" style="height:80px"></div>T2</div>
+                        <div class="bar-wrap"><div class="bar" style="height:125px"></div>T3</div>
+                        <div class="bar-wrap"><div class="bar" style="height:112px"></div>T4</div>
+                        <div class="bar-wrap"><div class="bar" style="height:150px"></div>T5</div>
+                        <div class="bar-wrap"><div class="bar" style="height:175px"></div>T6</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        let employees = JSON.parse(localStorage.getItem("employees")) || [
+    {
+        ma: "NV001",
+        hoTen: "Nguyễn Văn An",
+        chucVu: "Quản lý cửa hàng",
+        sdt: "0901111222",
+        email: "an.nv@tiembanhngot.vn",
+        ngayVaoLam: "01/03/2023",
+        luong: 12000000,
+        trangThai: "Đang làm việc"
+    },
+    {
+        ma: "NV002",
+        hoTen: "Trần Thị Bình",
+        chucVu: "Thợ làm bánh chính",
+        sdt: "0902222333",
+        email: "binh.tt@tiembanhngot.vn",
+        ngayVaoLam: "15/05/2023",
+        luong: 9500000,
+        trangThai: "Đang làm việc"
+    },
+    {
+    ma: "NV003",
+        hoTen: "Lê Văn Cường",
+        chucVu: "Thợ làm bánh phụ",
+        sdt: "0903333444",
+        email: "cuong.lv@tiembanhngot.vn",
+        ngayVaoLam: "01/08/2023",
+        luong: 7500000,
+        trangThai: "Đang làm việc"
+    },
+    {
+        ma: "NV004",
+        hoTen: "Phạm Thị Dung",
+        chucVu: "Thu ngân",
+        sdt: "0904444555",
+        email: "dung.pt@tiembanhngot.vn",
+        ngayVaoLam: "10/09/2023",
+        luong: 6800000,
+        trangThai: "Đang làm việc"
+    },
+    {
+        ma: "NV005",
+        hoTen: "Hoàng Văn Em",
+        chucVu: "Phục vụ",
+        sdt: "0905555666",
+        email: "em.hv@tiembanhngot.vn",
+        ngayVaoLam: "20/11/2023",
+        luong: 6000000,
+        trangThai: "Nghỉ phép"
+    }
+];
+
+function saveEmployeesToLocal() {
+    localStorage.setItem("employees", JSON.stringify(employees));
+}
+
+function renderEmployees() {
+    content.innerHTML = `
+        <div class="page-title">
+            <div>
+                <h1>👤 Quản Lý Nhân Viên</h1>
+                <p>Danh sách và thông tin nhân viên</p>
+            </div>
+            <button class="btn-primary" onclick="openEmployeeModal()">+ Thêm nhân viên</button>
+        </div>
+
+        <div class="cards">
+            <div class="card"><h2>${employees.length}</h2><p>Tổng nhân viên</p></div>
+            <div class="card"><h2>${employees.filter(e => e.trangThai === "Đang làm việc").length}</h2><p>Đang làm việc</p></div>
+            <div class="card"><h2>${employees.filter(e => e.trangThai === "Nghỉ phép").length}</h2><p>Nghỉ phép</p></div>
+            <div class="card"><h2>${employees.filter(e => e.trangThai === "Thử việc").length}</h2><p>Thử việc</p></div>
+        </div>
+
+        <div class="search-row">
+            <input id="searchEmployee" onkeyup="loadEmployeeTable()" placeholder="🔍 Tìm theo tên, mã nhân viên...">
+            <button class="filter active">Tất cả</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã NV</th>
+                    <th>Họ và tên</th>
+                    <th>Chức vụ</th>
+                    <th>Số điện thoại</th>
+                    <th>Email</th>
+                    <th>Ngày vào làm</th>
+                    <th>Lương cơ bản</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="employeeTableBody"></tbody>
+        </table>
+    `;
+
+    loadEmployeeTable();
+}
+
+function loadEmployeeTable() {
+    const tbody = document.getElementById("employeeTableBody");
+    const searchInput = document.getElementById("searchEmployee");
+    const keyword = searchInput ? searchInput.value.toLowerCase() : "";
+
+    let filteredEmployees = employees;
+
+    if (keyword !== "") {
+        filteredEmployees = filteredEmployees.filter(e =>
+            e.ma.toLowerCase().includes(keyword) ||
+            e.hoTen.toLowerCase().includes(keyword) ||
+            e.sdt.includes(keyword)
+        );
+    }
+
+    if (filteredEmployees.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align:center; padding:25px; color:#9b6a5a;">
+                    Không có nhân viên phù hợp
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    tbody.innerHTML = filteredEmployees.map(e => `
+        <tr>
+            <td>${e.ma}</td>
+            <td><b>${e.hoTen}</b></td>
+            <td>${e.chucVu}</td>
+            <td>${e.sdt}</td>
+            <td>${e.email}</td>
+            <td>${e.ngayVaoLam}</td>
+            <td class="price">${formatMoney(e.luong)}</td>
+            <td>
+                <span class="status ${getEmployeeStatusClass(e.trangThai)}">
+                    ${e.trangThai}
+                </span>
+            </td>
+            <td>
+                <button class="action-btn edit" onclick="editEmployee('${e.ma}')">Sửa</button>
+                <button class="action-btn delete" onclick="deleteEmployee('${e.ma}')">Xóa</button>
+            </td>
+        </tr>
+    `).join("");
+}
+
+function openEmployeeModal() {
+    document.getElementById("employeeModal").style.display = "flex";
+}
+
+function closeEmployeeModal() {
+    document.getElementById("employeeModal").style.display = "none";
+
+    document.getElementById("maNV").value = "";
+    document.getElementById("hoTenNV").value = "";
+    document.getElementById("chucVuNV").value = "Quản lý cửa hàng";
+    document.getElementById("sdtNV").value = "";
+    document.getElementById("emailNV").value = "";
+    document.getElementById("ngayVaoLamNV").value = "";
+    document.getElementById("luongNV").value = "";
+    document.getElementById("trangThaiNV").value = "Đang làm việc";
+}
+
+function saveEmployee() {
+    const ma = document.getElementById("maNV").value.trim();
+    const hoTen = document.getElementById("hoTenNV").value.trim();
+    const chucVu = document.getElementById("chucVuNV").value;
+    const sdt = document.getElementById("sdtNV").value.trim();
+    const email = document.getElementById("emailNV").value.trim();
+    const ngayInput = document.getElementById("ngayVaoLamNV").value;
+    const luong = Number(document.getElementById("luongNV").value);
+    const trangThai = document.getElementById("trangThaiNV").value;
+
+    if (ma === "" || hoTen === "" || sdt === "" || email === "" || ngayInput === "" || luong <= 0) {
+        alert("Vui lòng nhập đầy đủ thông tin nhân viên");
+        return;
+    }
+
+    const isExist = employees.some(e => e.ma === ma);
+
+    if (isExist) {
+        alert("Mã nhân viên đã tồn tại");
+        return;
+    }
+
+    const parts = ngayInput.split("-");
+    const ngayVaoLam = `${parts[2]}/${parts[1]}/${parts[0]}`;
+
+    employees.push({
+        ma: ma,
+        hoTen: hoTen,
+        chucVu: chucVu,
+        sdt: sdt,
+        email: email,
+        ngayVaoLam: ngayVaoLam,
+        luong: luong,
+        trangThai: trangThai
+    });
+
+    saveEmployeesToLocal();
+    closeEmployeeModal();
+    renderEmployees();
+
+    alert("Thêm nhân viên thành công");
+}
+
+function deleteEmployee(ma) {
+    const confirmDelete = confirm("Bạn có chắc muốn xóa nhân viên này không?");
+
+    if (!confirmDelete) return;
+
+    employees = employees.filter(e => e.ma !== ma);
+    saveEmployeesToLocal();
+    renderEmployees();
+}
+
+function editEmployee(ma) {
+    const employee = employees.find(e => e.ma === ma);
+
+    if (!employee) return;
+
+    const hoTenMoi = prompt("Nhập họ tên mới:", employee.hoTen);
+    const sdtMoi = prompt("Nhập số điện thoại mới:", employee.sdt);
+    const luongMoi = prompt("Nhập lương mới:", employee.luong);
+
+    if (hoTenMoi === null || sdtMoi === null || luongMoi === null) return;
+
+    employee.hoTen = hoTenMoi;
+    employee.sdt = sdtMoi;
+    employee.luong = Number(luongMoi);
+
+    saveEmployeesToLocal();
+    renderEmployees();
+}
+
+function getEmployeeStatusClass(status) {
+    if (status === "Đang làm việc") return "green";
+    if (status === "Nghỉ phép") return "yellow";
+    return "blue";
+}
+        renderDashboard();
+    </script>
+    <script>
+    if (localStorage.getItem("isLogin") !== "true") {
+        window.location.href = "index.html";
+    }
+
+    function dangXuat() {
+        localStorage.removeItem("isLogin");
+        window.location.href = "index.html";
+    }
+</script>
+    <div class="modal" id="productModal">
+    <div class="modal-box">
+        <h2>🧁 Thêm bánh mới</h2>
+
+        <div class="form-group">
+            <label>Mã bánh</label>
+            <input id="maBanh" placeholder="Ví dụ: BN006">
+        </div>
+
+        <div class="form-group">
+            <label>Tên bánh</label>
+            <input id="tenBanh" placeholder="Nhập tên bánh">
+        </div>
+
+        <div class="form-group">
+            <label>Loại bánh</label>
+            <select id="loaiBanh">
+                <option>Bánh kem</option>
+                <option>Bánh gato</option>
+                <option>Bánh mousse</option>
+                <option>Bánh cupcake</option>
+                <option>Bánh macaron</option>
+                <option>Bánh donut</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Giá bán</label>
+            <input id="giaBan" type="number" placeholder="Ví dụ: 285000">
+        </div>
+
+        <div class="form-group">
+            <label>Số lượng tồn</label>
+            <input id="tonKho" type="number" placeholder="Ví dụ: 10">
+        </div>
+
+        <div class="form-group">
+            <label>Mô tả</label>
+            <textarea id="moTa" rows="3" placeholder="Nhập mô tả ngắn"></textarea>
+            <div class="form-group">
+    <label>Hình ảnh bánh</label>
+    <input id="hinhAnhBanh" placeholder="Dán link hình ảnh bánh">
+</div>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeProductModal()">Hủy</button>
+            <button class="btn-save" onclick="saveProduct()">Lưu bánh</button>
+        </div>
+    </div>
+</div>
+    <div class="modal" id="orderModal">
+    <div class="modal-box">
+        <h2>📋 Tạo đơn hàng mới</h2>
+
+        <div class="form-group">
+            <label>Mã đơn</label>
+            <input id="maDon" placeholder="Ví dụ: DH007">
+        </div>
+
+        <div class="form-group">
+            <label>Tên khách hàng</label>
+            <input id="tenKhach" placeholder="Nhập tên khách hàng">
+        </div>
+
+        <div class="form-group">
+            <label>Số điện thoại</label>
+            <input id="sdtKhach" placeholder="Nhập số điện thoại">
+        </div>
+
+        <div class="form-group">
+            <label>Sản phẩm</label>
+            <select id="sanPhamDon" onchange="capNhatGiaDonHang()">
+                <option value="Bánh kem dâu tây" data-price="285000">Bánh kem dâu tây</option>
+                <option value="Bánh socola" data-price="320000">Bánh socola</option>
+                <option value="Bánh tiramisu" data-price="350000">Bánh tiramisu</option>
+                <option value="Bánh cupcake hồng" data-price="45000">Bánh cupcake hồng</option>
+                <option value="Bánh donut" data-price="35000">Bánh donut</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Số lượng</label>
+            <input id="soLuongDon" type="number" value="1" min="1" oninput="capNhatGiaDonHang()">
+        </div>
+
+        <div class="form-group">
+            <label>Tổng tiền</label>
+            <input id="tongTienDon" readonly>
+        </div>
+
+        <div class="form-group">
+            <label>Trạng thái</label>
+            <select id="trangThaiDon">
+                <option>Chờ xác nhận</option>
+                <option>Đang chuẩn bị</option>
+                <option>Đã giao</option>
+                <option>Đã hủy</option>
+            </select>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeOrderModal()">Hủy</button>
+            <button class="btn-save" onclick="saveOrder()">Lưu đơn hàng</button>
+        </div>
+    </div>
+</div>
+<div class="modal" id="customerModal">
+    <div class="modal-box">
+        <h2>👥 Thêm khách hàng</h2>
+
+        <div class="form-group">
+            <label>Mã khách hàng</label>
+            <input id="maKH" placeholder="Ví dụ: KH006">
+        </div>
+
+        <div class="form-group">
+            <label>Họ và tên</label>
+            <input id="hoTenKH" placeholder="Nhập họ tên khách hàng">
+        </div>
+
+        <div class="form-group">
+            <label>Số điện thoại</label>
+            <input id="sdtKH" placeholder="Nhập số điện thoại">
+        </div>
+
+        <div class="form-group">
+            <label>Địa chỉ</label>
+            <input id="diaChiKH" placeholder="Nhập địa chỉ">
+        </div>
+
+        <div class="form-group">
+            <label>Số đơn hàng</label>
+            <input id="soDonKH" type="number" value="0" min="0">
+        </div>
+
+        <div class="form-group">
+            <label>Tổng chi tiêu</label>
+            <input id="tongChiTieuKH" type="number" value="0" min="0">
+        </div>
+
+        <div class="form-group">
+            <label>Ngày tham gia</label>
+            <input id="ngayThamGiaKH" type="date">
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeCustomerModal()">Hủy</button>
+            <button class="btn-save" onclick="saveCustomer()">Lưu khách hàng</button>
+        </div>
+    </div>
+</div>
+<div class="modal" id="inventoryModal">
+    <div class="modal-box">
+        <h2>📦 Thêm nguyên liệu</h2>
+
+        <div class="form-group">
+            <label>Mã nguyên liệu</label>
+            <input id="maNL" placeholder="Ví dụ: NL006">
+        </div>
+
+        <div class="form-group">
+            <label>Tên nguyên liệu</label>
+            <input id="tenNL" placeholder="Nhập tên nguyên liệu">
+        </div>
+
+        <div class="form-group">
+            <label>Loại nguyên liệu</label>
+            <select id="loaiNL">
+                <option>Nguyên liệu khô</option>
+                <option>Nguyên liệu tươi</option>
+                <option>Trái cây</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Đơn vị tính</label>
+            <input id="donViNL" placeholder="kg, lít, quả, hộp...">
+        </div>
+
+        <div class="form-group">
+            <label>Số lượng tồn</label>
+            <input id="soLuongTonNL" type="number" min="0" placeholder="Ví dụ: 10">
+        </div>
+
+        <div class="form-group">
+            <label>Mức cảnh báo</label>
+            <input id="mucCanhBaoNL" type="number" min="0" placeholder="Ví dụ: 3">
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeInventoryModal()">Hủy</button>
+            <button class="btn-save" onclick="saveInventory()">Lưu nguyên liệu</button>
+        </div>
+    </div>
+</div>
+<div class="modal" id="employeeModal">
+    <div class="modal-box">
+        <h2>👤 Thêm nhân viên</h2>
+
+        <div class="form-group">
+            <label>Mã nhân viên</label>
+            <input id="maNV" placeholder="Ví dụ: NV006">
+        </div>
+
+        <div class="form-group">
+            <label>Họ và tên</label>
+            <input id="hoTenNV" placeholder="Nhập họ tên nhân viên">
+        </div>
+
+        <div class="form-group">
+            <label>Chức vụ</label>
+            <select id="chucVuNV">
+              <option>Quản lý cửa hàng</option>
+                <option>Thợ làm bánh chính</option>
+                <option>Thợ làm bánh phụ</option>
+                <option>Thu ngân</option>
+                <option>Phục vụ</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Số điện thoại</label>
+            <input id="sdtNV" placeholder="Nhập số điện thoại">
+        </div>
+
+        <div class="form-group">
+            <label>Email</label>
+            <input id="emailNV" placeholder="Nhập email">
+        </div>
+
+        <div class="form-group">
+            <label>Ngày vào làm</label>
+            <input id="ngayVaoLamNV" type="date">
+        </div>
+
+        <div class="form-group">
+            <label>Lương cơ bản</label>
+            <input id="luongNV" type="number" placeholder="Ví dụ: 8000000">
+        </div>
+
+        <div class="form-group">
+            <label>Trạng thái</label>
+            <select id="trangThaiNV">
+                <option>Đang làm việc</option>
+                <option>Nghỉ phép</option>
+                <option>Thử việc</option>
+            </select>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeEmployeeModal()">Hủy</button>
+            <button class="btn-save" onclick="saveEmployee()">Lưu nhân viên</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
